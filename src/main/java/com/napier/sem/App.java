@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class App {
 
@@ -73,7 +74,7 @@ public class App {
                             + "IndepYear, Population, LifeExpectancy, GNP, GNPOld, "
                             + "LocalName, GovernmentForm, HeadOfState, Capital, Code2 "
                             + "FROM country "
-                            + "WHERE Code = '" + code + "'";
+                            + "ORDER BY Population DESC";
 
             // Execute SQL query
             ResultSet rset = stmt.executeQuery(strSelect);
@@ -119,7 +120,7 @@ public class App {
         }
     }
     /**
-     * Display Country Details
+     * Display A single Country Details
      */
     public void displayCountry(Country c)
     {
@@ -149,6 +150,64 @@ public class App {
             System.out.println("Country not found.");
         }
     }
+
+    /**
+     * Gets all the countries in the world, organised by largest population to smallest.
+     * @return A list of all countries, or null if there is an error.
+     */
+    public ArrayList<Country> getAllCountries()
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT country.Code, country.Name, country.Population "
+                            + "FROM country "
+                            + "ORDER BY country.Population DESC";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next())
+            {
+                Country c = new Country();
+                c.CountryCode = rset.getString("country.Code");
+                c.CountryName = rset.getString("country.Name");
+                c.CountryPopulation = rset.getInt("country.Population");
+                countries.add(c);
+            }
+            return countries;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+    /**
+     * Displays all Countries
+     */
+    public void displayCountries(ArrayList<Country> countries)
+    {
+        if (countries == null)
+        {
+            System.out.println("No countries");
+            return;
+        }
+
+        System.out.printf("%-5s %-45s %-15s%n", "Code", "Name", "Population");
+
+        for (Country c : countries)
+        {
+            if (c == null) continue;
+            System.out.printf("%-5s %-45s %-15s%n",
+                    c.CountryCode, c.CountryName, c.CountryPopulation);
+        }
+    }
     /**
      * Disconnect from the MySQL database.
      */
@@ -174,15 +233,15 @@ public class App {
 
         // Connect to database
         a.connect();
-        System.out.println("PLEASE WORK");
+
+        //Gets all countries and puts them ordered by population descending
+        ArrayList<Country> countries = a.getAllCountries();
+        //Displays them
+        a.displayCountries(countries);
 
 
-        //Get Country
-        Country c = a.getCountry("ARG");
 
-        //Display The country
 
-        a.displayCountry(c);
 
         // Disconnect from database
         a.disconnect();
