@@ -70,11 +70,9 @@ public class App {
 
             // Create SQL query
             String strSelect =
-                    "SELECT Code, Name, Continent, Region, SurfaceArea, "
-                            + "IndepYear, Population, LifeExpectancy, GNP, GNPOld, "
-                            + "LocalName, GovernmentForm, HeadOfState, Capital, Code2 "
+                    "SELECT Code, Name, Population "
                             + "FROM country "
-                            + "ORDER BY Population DESC";
+                            + "WHERE Code = '" + code + "'";
 
             // Execute SQL query
             ResultSet rset = stmt.executeQuery(strSelect);
@@ -86,24 +84,7 @@ public class App {
 
                 c.CountryCode = rset.getString("Code");
                 c.CountryName = rset.getString("Name");
-                c.Continent = rset.getString("Continent");
-                c.Region = rset.getString("Region");
-                c.SurfaceArea = rset.getDouble("SurfaceArea");
-                int indepYear = rset.getInt("IndepYear");
-                c.IndepYear = rset.wasNull() ? null : indepYear;
                 c.CountryPopulation = rset.getInt("Population");
-                double lifeExpectancy = rset.getDouble("LifeExpectancy");
-                c.LifeExpectancy = rset.wasNull() ? null : lifeExpectancy;
-                double gnp = rset.getDouble("GNP");
-                c.GNP = rset.wasNull() ? null : gnp;
-                double gnpOld = rset.getDouble("GNPOld");
-                c.GNPOld = rset.wasNull() ? null : gnpOld;
-                c.LocalName = rset.getString("LocalName");
-                c.GovernmentForm = rset.getString("GovernmentForm");
-                c.HeadOfState = rset.getString("HeadOfState");
-                int capital = rset.getInt("Capital");
-                c.Capital = rset.wasNull() ? null : capital;
-                c.CountryCode2 = rset.getString("Code2");
 
                 return c;
             }
@@ -120,7 +101,7 @@ public class App {
         }
     }
     /**
-     * Display A single Country Details
+     * Display Country's Details
      */
     public void displayCountry(Country c)
     {
@@ -129,19 +110,8 @@ public class App {
             System.out.println(
                             "Country Code: " + c.CountryCode + "\n"
                             + "Name: " + c.CountryName + "\n"
-                            + "Continent: " + c.Continent + "\n"
-                            + "Region: " + c.Region + "\n"
-                            + "Surface Area: " + c.SurfaceArea + "\n"
-                            + "Independence Year: " + c.IndepYear + "\n"
                             + "Population: " + c.CountryPopulation + "\n"
-                            + "Life Expectancy: " + c.LifeExpectancy + "\n"
-                            + "GNP: " + c.GNP + "\n"
-                            + "Old GNP: " + c.GNPOld + "\n"
-                            + "Local Name: " + c.LocalName + "\n"
-                            + "Government: " + c.GovernmentForm + "\n"
-                            + "Head of State: " + c.HeadOfState + "\n"
-                            + "Capital: " + c.Capital + "\n"
-                            + "2-letter country Code: " + c.CountryCode2 + "\n"
+
 
             );
         }
@@ -233,6 +203,17 @@ public class App {
 
         // Connect to database
         a.connect();
+
+        System.out.println("FIRST QUERY// ONE COUNTRY'S POPULATION(GREAT BRITAN)");
+
+        //Get Country to display population
+        Country c = a.getCountry("GBR");
+
+        //Display The country's population
+
+        a.displayCountry(c);
+
+       System.out.println("SECOND QUERY// ALL COUNTRIES IN WORLD ORDERED BY POP");
 
         //Gets all countries and puts them ordered by population descending
         ArrayList<Country> countries = a.getAllCountries();
