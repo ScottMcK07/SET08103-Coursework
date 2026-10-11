@@ -428,6 +428,10 @@ public class App {
         }
     }
 
+    /**
+     * Gets a single Continent's Population
+     * @return Continent Population or an error if something goes wrong
+     */
     public Country getContinentPop(String Continent)
     {
         try
@@ -489,6 +493,70 @@ public class App {
         }
     }
 
+    /**
+     * Gets a single Region's Population
+     * @return Region Population or an error if something goes wrong
+     */
+    public Country getRegionPop(String Region)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+
+            // Create SQL query
+            String strSelect =
+                    "SELECT Region, SUM(Population) As RegionPopulation "
+                            + "FROM country "
+                            + "WHERE Region = '" + Region + "' "
+                            + "GROUP BY Region";
+
+            // Execute SQL query
+            ResultSet rset = stmt.executeQuery(strSelect);
+
+            // Check whether a continent was returned
+            if (rset.next())
+            {
+                Country reg = new Country();
+
+
+                reg.Region = rset.getString("Region");
+                reg.CountryPopulation = rset.getInt("RegionPopulation");
+
+                return reg;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get Continent details");
+            return null;
+        }
+    }
+    /**
+     * Display Region's Population
+     */
+    public void DisplayRegionPop(Country reg)
+    {
+        if (reg != null)
+        {
+            System.out.println(
+
+                    "Region Name: " + reg.Region + "\n"
+                            + "Region Population: " + reg.CountryPopulation + "\n"
+
+
+            );
+        }
+        else
+        {
+            System.out.println("Region not found.");
+        }
+    }
 
 
     /**
@@ -603,6 +671,19 @@ public class App {
 
         // displays continent's population
         a.DisplayContinentPop(cont);
+
+        System.out.println(" ");
+        System.out.println("EIGHTH QUERY// POPULATION OF A REGION(WESTERN EUROPE)");
+        System.out.println(" ");
+
+        // Gets region's population
+        Country reg = a.getRegionPop("Western Europe");
+
+
+
+        // displays region's population
+        a.DisplayRegionPop(reg);
+
         // Disconnect from database
         a.disconnect();
     }
