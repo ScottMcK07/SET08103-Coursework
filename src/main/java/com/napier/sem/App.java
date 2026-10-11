@@ -310,6 +310,69 @@ public class App {
                     c.CountryCode, c.CountryName, c.CountryPopulation);
         }
     }
+
+    /**
+     * This will get the population of the world
+     * @return World population or an error if something goes wrong
+     */
+
+    public Long getWorldPop()
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+
+            // Create SQL query
+            String strSelect =
+                    "SELECT SUM(Population) As GlobalPopulation "
+                            + "FROM country ";
+
+            // Execute SQL query
+            ResultSet rset = stmt.executeQuery(strSelect);
+
+            // Check whether a city was returned
+            if (rset.next())
+            {
+
+
+
+
+
+                return rset.getLong("GlobalPopulation");
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get World Population");
+            return null;
+        }
+    }
+    /**
+     * Display the population of the Worl d
+     */
+    public void DisplayWorldPop(long worldpop )
+    {
+        if (worldpop >= 0)
+        {
+            System.out.println("World Population: " + worldpop );
+        }
+        else
+        {
+            System.out.println("World Population not found.");
+        }
+    }
+
+
+
+
+
+
     /**
      * Disconnect from the MySQL database.
      */
@@ -390,8 +453,12 @@ public class App {
         //Displays them
         a.displayCountries(countries);
 
+        System.out.println(" ");
+        System.out.println("FIFTH QUERY// GLOVAL POPULATION OF EVERYONE");
+        System.out.println(" ");
 
-
+        long worldpop = a.getWorldPop();
+        a.DisplayWorldPop(worldpop);
 
 
         // Disconnect from database
