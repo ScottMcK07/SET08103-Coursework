@@ -59,9 +59,9 @@ public class App {
     }
 
     /**
-     * Get details of a country from its code.
+     * Get details of a country's population
      */
-    public Country getCountry(String code)
+    public Country getCountryPop(String code)
     {
         try
         {
@@ -101,9 +101,9 @@ public class App {
         }
     }
     /**
-     * Display Country's Details
+     * Display Country's Population
      */
-    public void displayCountry(Country c)
+    public void displayCountryPop(Country c)
     {
         if (c != null)
         {
@@ -120,6 +120,78 @@ public class App {
             System.out.println("Country not found.");
         }
     }
+
+    /**
+     * Get details of a country's population
+     */
+    public City getCityPop(String ID)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+
+            // Create SQL query
+            String strSelect =
+                    "SELECT ID, Name, Population "
+                            + "FROM city "
+                            + "WHERE ID = '" + ID + "'";
+
+            // Execute SQL query
+            ResultSet rset = stmt.executeQuery(strSelect);
+
+            // Check whether a city was returned
+            if (rset.next())
+            {
+                City c1 = new City();
+
+                c1.CityID = rset.getString("ID");
+                c1.CityName = rset.getString("Name");
+                c1.CityPopulation = rset.getInt("Population");
+
+                return c1;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+    /**
+     * Display Country's Population
+     */
+    public void DisplayCityPop(City c1)
+    {
+        if (c1 != null)
+        {
+            System.out.println(
+                    "ID: " + c1.CityID + "\n"
+                            + "Name: " + c1.CityName + "\n"
+                            + "Population: " + c1.CityPopulation + "\n"
+
+
+            );
+        }
+        else
+        {
+            System.out.println("City not found.");
+        }
+    }
+
+
+
+
+
+
+
+
+
 
     /**
      * Gets all the countries in the world, organised by largest population to smallest.
@@ -207,13 +279,27 @@ public class App {
         System.out.println("FIRST QUERY// ONE COUNTRY'S POPULATION(GREAT BRITAN)");
 
         //Get Country to display population
-        Country c = a.getCountry("GBR");
+        Country c = a.getCountryPop("GBR");
 
         //Display The country's population
 
-        a.displayCountry(c);
+        a.displayCountryPop(c);
 
-       System.out.println("SECOND QUERY// ALL COUNTRIES IN WORLD ORDERED BY POP");
+        System.out.println("SECOND QUERY// POPULATION OF A CITY");
+
+
+
+        // Gets city's population
+        City c1 = a.getCityPop("5");
+
+
+
+        // displays city's population
+        a.DisplayCityPop(c1);
+
+
+
+       System.out.println("THIRD QUERY// ALL COUNTRIES IN WORLD ORDERED BY POPULATION");
 
         //Gets all countries and puts them ordered by population descending
         ArrayList<Country> countries = a.getAllCountries();
