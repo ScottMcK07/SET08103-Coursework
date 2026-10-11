@@ -149,6 +149,7 @@ public class App {
                 c1.CityName = rset.getString("Name");
                 c1.CityPopulation = rset.getInt("Population");
 
+
                 return c1;
             }
             else
@@ -184,11 +185,70 @@ public class App {
         }
     }
 
+    /**
+     * Gets Details on District Population
+     */
 
 
+    public City getDistrictPop(String District)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+
+            // Create SQL query
+            String strSelect =
+                    "SELECT District, SUM(Population) As DistrictPopulation "
+                            + "FROM city "
+                            + "WHERE District = '" + District + "'";
+
+            // Execute SQL query
+            ResultSet rset = stmt.executeQuery(strSelect);
+
+            // Check whether a city was returned
+            if (rset.next())
+            {
+                City c2 = new City();
 
 
+                c2.District = rset.getString("District");
+                c2.CityPopulation = rset.getInt("DistrictPopulation");
 
+                return c2;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+    /**
+     * Display District's Population
+     */
+    public void DisplayDistrictPop(City c2)
+    {
+        if (c2 != null)
+        {
+            System.out.println(
+
+                            "District Name: " + c2.District + "\n"
+                            + "District Population: " + c2.CityPopulation + "\n"
+
+
+            );
+        }
+        else
+        {
+            System.out.println("District not found.");
+        }
+    }
 
 
 
@@ -276,7 +336,11 @@ public class App {
         // Connect to database
         a.connect();
 
+
+        System.out.println(" ");
         System.out.println("FIRST QUERY// ONE COUNTRY'S POPULATION(GREAT BRITAN)");
+        System.out.println(" ");
+
 
         //Get Country to display population
         Country c = a.getCountryPop("GBR");
@@ -285,8 +349,10 @@ public class App {
 
         a.displayCountryPop(c);
 
-        System.out.println("SECOND QUERY// POPULATION OF A CITY");
 
+        System.out.println(" ");
+        System.out.println("SECOND QUERY// POPULATION OF A CITY");
+        System.out.println(" ");
 
 
         // Gets city's population
@@ -299,7 +365,25 @@ public class App {
 
 
 
-       System.out.println("THIRD QUERY// ALL COUNTRIES IN WORLD ORDERED BY POPULATION");
+
+
+        System.out.println(" ");
+        System.out.println("THIRD QUERY// POPULATION OF A DISTRICT");
+        System.out.println(" ");
+
+
+        // Gets district's population
+        City c2 = a.getDistrictPop("Scotland");
+
+
+
+        // displays city's population
+        a.DisplayDistrictPop(c2);
+
+
+        System.out.println(" ");
+        System.out.println("FOURTH QUERY// ALL COUNTRIES IN WORLD ORDERED BY POPULATION");
+        System.out.println(" ");
 
         //Gets all countries and puts them ordered by population descending
         ArrayList<Country> countries = a.getAllCountries();
