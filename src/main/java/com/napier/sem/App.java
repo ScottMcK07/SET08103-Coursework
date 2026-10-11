@@ -257,7 +257,7 @@ public class App {
      * Gets all the countries in the world, organised by largest population to smallest.
      * @return A list of all countries, or null if there is an error.
      */
-    public ArrayList<Country> getAllCountries()
+    public ArrayList<Country> getAllCountriesPopDesc()
     {
         try
         {
@@ -267,7 +267,8 @@ public class App {
             String strSelect =
                     "SELECT country.Code, country.Name, country.Population "
                             + "FROM country "
-                            + "ORDER BY country.Population DESC";
+                            + "ORDER BY country.Population DESC "
+                            + "LIMIT 20";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract country information
@@ -291,9 +292,9 @@ public class App {
     }
 
     /**
-     * Displays all Countries
+     * Displays all Countries from largest to smallest population
      */
-    public void displayCountries(ArrayList<Country> countries)
+    public void displayCountriesPopDesc(ArrayList<Country> countries)
     {
         if (countries == null)
         {
@@ -368,8 +369,125 @@ public class App {
         }
     }
 
+    /**
+     * Gets all the cities in the world, organised by largest population to smallest.
+     * @return A list of all cities ordered from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<City> getAllCitiesPopDesc()
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.CountryCode, city.Name, city.Population "
+                            + "FROM city "
+                            + "ORDER BY city.Population DESC "
+                            + "LIMIT 20";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next())
+            {
+                City c = new City();
+                c.CityCode = rset.getString("city.CountryCode");
+                c.CityName = rset.getString("city.Name");
+                c.CityPopulation = rset.getInt("city.Population");
+                cities.add(c);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get all city details");
+            return null;
+        }
+    }
+
+    /**
+     * Displays all cities from largest to smallest population
+     */
+    public void displayCitiesPopDesc(ArrayList<City> cities)
+    {
+        if (cities == null)
+        {
+            System.out.println("No cities");
+            return;
+        }
+
+        System.out.printf("%-5s %-45s %-15s%n", "Code", "Name", "Population");
+
+        for (City c : cities)
+        {
+            if (c == null) continue;
+            System.out.printf("%-5s %-45s %-15s%n",
+                    c.CityCode, c.CityName, c.CityPopulation);
+        }
+    }
+
+    public Country getContinentPop(String Continent)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+
+            // Create SQL query
+            String strSelect =
+                    "SELECT Continent, SUM(Population) As ContinentPopulation "
+                            + "FROM country "
+                            + "WHERE Continent = '" + Continent + "' "
+                            + "GROUP BY Continent";
+
+            // Execute SQL query
+            ResultSet rset = stmt.executeQuery(strSelect);
+
+            // Check whether a continent was returned
+            if (rset.next())
+            {
+                Country cont = new Country();
 
 
+                cont.Continent = rset.getString("Continent");
+                cont.CountryPopulation = rset.getInt("ContinentPopulation");
+
+                return cont;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get Continent details");
+            return null;
+        }
+    }
+    /**
+     * Display Continent's Population
+     */
+    public void DisplayContinentPop(Country cont)
+    {
+        if (cont != null)
+        {
+            System.out.println(
+
+                            "Continent Name: " + cont.Continent + "\n"
+                            + "Continent Population: " + cont.CountryPopulation + "\n"
+
+
+            );
+        }
+        else
+        {
+            System.out.println("Continent not found.");
+        }
+    }
 
 
 
@@ -414,7 +532,7 @@ public class App {
 
 
         System.out.println(" ");
-        System.out.println("SECOND QUERY// POPULATION OF A CITY");
+        System.out.println("SECOND QUERY// POPULATION OF A CITY(AMSTERDAM)");
         System.out.println(" ");
 
 
@@ -431,7 +549,7 @@ public class App {
 
 
         System.out.println(" ");
-        System.out.println("THIRD QUERY// POPULATION OF A DISTRICT");
+        System.out.println("THIRD QUERY// POPULATION OF A DISTRICT(SCOTLAND)");
         System.out.println(" ");
 
 
@@ -440,27 +558,51 @@ public class App {
 
 
 
-        // displays city's population
+        // displays district's population
         a.DisplayDistrictPop(c2);
 
 
         System.out.println(" ");
-        System.out.println("FOURTH QUERY// ALL COUNTRIES IN WORLD ORDERED BY POPULATION");
+        System.out.println("FOURTH QUERY// ALL COUNTRIES IN WORLD ORDERED BY LARGEST POPULATION TO SMALLEST LIMITED BY 20");
         System.out.println(" ");
 
         //Gets all countries and puts them ordered by population descending
-        ArrayList<Country> countries = a.getAllCountries();
+        ArrayList<Country> countries = a.getAllCountriesPopDesc();
         //Displays them
-        a.displayCountries(countries);
+        a.displayCountriesPopDesc(countries);
 
         System.out.println(" ");
         System.out.println("FIFTH QUERY// GLOVAL POPULATION OF EVERYONE");
         System.out.println(" ");
 
+        // Gets Global Population
         long worldpop = a.getWorldPop();
+
+        //Displays Global Population
         a.DisplayWorldPop(worldpop);
 
+        System.out.println(" ");
+        System.out.println("SIXTH QUERY// ALL CITIES IN WORLD ORDERED BY LARGEST POPULATION TO SMALLEST LIMITED BY 20");
+        System.out.println(" ");
 
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<City> cities = a.getAllCitiesPopDesc();
+        //Displays them
+        a.displayCitiesPopDesc(cities);
+
+
+        System.out.println(" ");
+        System.out.println("SEVENTH QUERY// POPULATION OF A CONTINENT(EUROPE)");
+        System.out.println(" ");
+
+
+        // Gets continent's population
+        Country cont = a.getContinentPop("Europe");
+
+
+
+        // displays continent's population
+        a.DisplayContinentPop(cont);
         // Disconnect from database
         a.disconnect();
     }
