@@ -28,6 +28,10 @@ public class City {
      * City's Population
      */
     public double CityPopulation;
+    /**
+     * City's corresponding Country Name
+     */
+    public String CityCountry;
 
 
 }
