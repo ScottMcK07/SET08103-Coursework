@@ -233,7 +233,7 @@ public class App {
             return;
         }
 
-        System.out.printf("%-5s %-45s %-15s%n", "Code", "Name","Continent", "Region", "Population", "Capital");
+        System.out.printf("%-5s %-45s %-15s %-27s %-12s %-30s%n", "Code", "Name","Continent", "Region", "Population", "Capital");
 
         for (Country c : countries)
         {
@@ -255,9 +255,10 @@ public class App {
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect =
-                    "SELECT city.CountryCode, city.Name, city.Population "
+                    "SELECT city.Name, country.Name AS Country, city.District, city.Population "
                             + "FROM city "
-                            + "ORDER BY city.Population DESC ";
+                            + "JOIN country ON city.CountryCode = country.Code "
+                            + "ORDER BY city.Population DESC";
 
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
@@ -266,9 +267,12 @@ public class App {
             while (rset.next())
             {
                 City c = new City();
-                c.CityCode = rset.getString("city.CountryCode");
-                c.CityName = rset.getString("city.Name");
-                c.CityPopulation = rset.getInt("city.Population");
+
+                c.CityName = rset.getString("Name");
+                c.CityCountry = rset.getString("Country");
+                c.District = rset.getString("District");
+                c.CityPopulation = rset.getDouble("Population");
+
                 cities.add(c);
             }
             return cities;
@@ -292,13 +296,13 @@ public class App {
             return;
         }
 
-        System.out.printf("%-5s %-45s %-15s%n", "Code", "Name", "Population");
+        System.out.printf("%-35s %-45s %-20s %-12s%n", "Name", "Country", "District", "Population");
 
         for (City c : cities)
         {
             if (c == null) continue;
-            System.out.printf("%-5s %-45s %-15s%n",
-                    c.CityCode, c.CityName, c.CityPopulation);
+            System.out.printf("%-35s %-45s %-20s %-12s%n",
+                    c.CityName, c.CityCountry, c.District, c.CityPopulation);
         }
     }
 
