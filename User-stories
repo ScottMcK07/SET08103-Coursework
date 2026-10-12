@@ -1,0 +1,114 @@
+USER STORY FILE
+ADD 🟩 TO BOXES [ ] WHEN FUFFILLED (e.g [🟩])
+
+---
+
+user 1:
+**As a user,**
+**I want to access country population data from the database,**
+**So that I can compare population figures between countries.**
+
+**Acceptance Criteria:**
+- [ ] Criteria 1: Be able to the database and retrieve country information
+- [ ] Criteria 2: View country population data for one or more countries
+- [ ] Criteria 3: Compare population values between countries
+- [ ] Criteria 4: Filter or sort countries by population where required
+
+**Definition of Done:**
+- [ ] All acceptance criteria are met.
+- [ ] Code is reviewed and approved.
+- [ ] Necessary tests are written and pass.
+- [ ] Feature is merged to release
+
+---
+
+user 2:
+**As a data analyst,**
+**I want to retrieve countries organized by population size,**
+**So that I can analyze global population distribution across different geographic levels.**
+
+**Acceptance Criteria:**
+- [ ] Criteria 1: Retrieve all countries in the world sorted by population (largest to smallest)
+- [ ] Criteria 2: Retrieve all countries in a specified continent sorted by population (largest to smallest)
+- [ ] Criteria 3: Retrieve all countries in a specified region sorted by population (largest to smallest)
+- [ ] Criteria 4: Retrieve the top N populated countries in the world where N is user-defined
+- [ ] Criteria 5: Retrieve the top N populated countries in a specified continent where N is user-defined
+- [ ] Criteria 6: Retrieve the top N populated countries in a specified region where N is user-defined
+
+**Definition of Done:**
+- [ ] All acceptance criteria are met.
+- [ ] Code is reviewed and approved.
+- [ ] Necessary tests are written and pass.
+- [ ] Feature is merged to release
+
+---
+
+user 3:
+**As a researcher,**
+**I want to access city population data organized by district, region, country and continent,**
+**So that I can study urbanization patterns and city growth trends across the world.**
+
+**Acceptance Criteria:**
+- [ ] Criteria 1: Retrieve all cities in the world sorted by population (largest to smallest)
+- [ ] Criteria 2: Retrieve all cities in a specified continent sorted by population (largest to smallest)
+- [ ] Criteria 3: Retrieve all cities in a specified region sorted by population (largest to smallest)
+- [ ] Criteria 4: Retrieve all cities in a specified country sorted by population (largest to smallest)
+- [ ] Criteria 5: Retrieve all cities in a specified district sorted by population (largest to smallest)
+- [ ] Criteria 6: Retrieve the top N populated cities in the world where N is user-defined
+- [ ] Criteria 7: Retrieve the top N populated cities in a specified continent where N is user-defined
+- [ ] Criteria 8: Retrieve the top N populated cities in a specified region where N is user-defined
+- [ ] Criteria 9: Retrieve the top N populated cities in a specified country where N is user-defined
+- [ ] Criteria 10: Retrieve the top N populated cities in a specified district where N is user-defined
+
+**Definition of Done:**
+- [ ] All acceptance criteria are met.
+- [ ] Code is reviewed and approved.
+- [ ] Necessary tests are written and pass.
+- [ ] Feature is merged to release
+
+---
+
+user 4:
+**As an administrator,**
+**I want to query capital city population data,**
+**So that I can understand the distribution and prominence of capital cities globally.**
+
+**Acceptance Criteria:**
+- [ ] Criteria 1: Retrieve all capital cities in the world sorted by population (largest to smallest)
+- [ ] Criteria 2: Retrieve all capital cities in a specified continent sorted by population (largest to smallest)
+- [ ] Criteria 3: Retrieve all capital cities in a specified region sorted by population (largest to smallest)
+- [ ] Criteria 4: Retrieve the top N populated capital cities in the world where N is user-defined
+- [ ] Criteria 5: Retrieve the top N populated capital cities in a specified continent where N is user-defined
+- [ ] Criteria 6: Retrieve the top N populated capital cities in a specified region where N is user-defined
+
+**Definition of Done:**
+- [ ] All acceptance criteria are met.
+- [ ] Code is reviewed and approved.
+- [ ] Necessary tests are written and pass.
+- [ ] Feature is merged to release
+
+---
+
+user 5:
+**As an organization manager,**
+**I want to access comprehensive population statistics across geographic levels,**
+**So that I can generate reports on urbanization and population distribution for business intelligence.**
+
+**Acceptance Criteria:**
+- [ ] Criteria 1: Retrieve the total population of the world
+- [ ] Criteria 2: Retrieve the total population of a specified continent
+- [ ] Criteria 3: Retrieve the total population of a specified region
+- [ ] Criteria 4: Retrieve the total population of a specified country
+- [ ] Criteria 5: Retrieve the total population of a specified district
+- [ ] Criteria 6: Retrieve the total population of a specified city
+- [ ] Criteria 7: Retrieve population breakdown by continent (total people, urban population, rural population)
+- [ ] Criteria 8: Retrieve population breakdown by region (total people, urban population, rural population)
+- [ ] Criteria 9: Retrieve population breakdown by country (total people, urban population, rural population)
+- [ ] Criteria 10: Retrieve the number of speakers for Chinese, English, Hindi, Spanish, and Arabic languages globally, sorted from greatest to smallest
+- [ ] Criteria 11: Retrieve the percentage of world population for each language speaker group
+
+**Definition of Done:**
+- [ ] All acceptance criteria are met.
+- [ ] Code is reviewed and approved.
+- [ ] Necessary tests are written and pass.
+- [ ] Feature is merged to release
