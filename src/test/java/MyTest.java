@@ -109,6 +109,27 @@ class AppTest {
 
         assertTrue(output().contains("No cities"));
     }
+
+    @Test
+    /*
+     To test if display cities will print every field correctly essentially extreme testing using Edinburgh as an example
+     */
+    void displayCitiesPrintsEveryField() {
+        City c = new City();
+        c.CityName = "Edinburgh";
+        c.CityCountry = "United Kingdom";
+        c.District = "Scotland";
+        c.CityPopulation = 450180;
+        ArrayList<City> list = new ArrayList<>();
+        list.add(c);
+
+        test.displayCitiesPopDesc(list);
+        String o = output();
+        assertTrue(o.contains("Edinburgh"));
+        assertTrue(o.contains("United Kingdom"));
+        assertTrue(o.contains("Scotland"));
+        assertTrue(o.contains("450180"));
+    }
 }
 
 
