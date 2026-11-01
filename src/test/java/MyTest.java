@@ -50,12 +50,19 @@ class AppTest {
     }
     @Test
      /*
-    To test when the connection goes wrong it should return null
+    To test when the connection goes wrong in getallcountries it should return null
      */
     void getAllCountries_noConnection_returnsNull () {
         assertNull(test.getAllCountriesPopDesc());
         }
 
+    @Test
+    /*
+    To test when the connection goes wrong in getallcities it should return null
+     */
+    void getAllCities_noConnection_returnsNull() {
+        assertNull(test.getAllCitiesPopDesc());
+    }
 
 
 }
