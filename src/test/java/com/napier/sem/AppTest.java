@@ -176,6 +176,60 @@ class AppTest {
         test.displayCitiesPopDesc(list);
 
     }
+
+    //  allCitiesInContinents tests
+
+    @Test
+    /*
+    Test is so that if theres no connection it should return null
+     */
+    void citiesInContinentNoConnectionReturnsNull() {
+        assertNull(test.getAllCitiesInContienentPopDesc("Europe"));
+    }
+
+    //  citiesInDistrict tests
+
+    @Test
+    /*
+    Test is so that if theres no connection it should return null
+     */
+    void citiesInDistrictNoConnectionReturnsNull() {
+        assertNull(test.getAllCitiesInDistrictPopDesc("Scotland"));
+    }
+
+    // getting all capital cities in the world tests
+
+    @Test
+    /*
+    Test is so that if theres no connection it should return null
+     */
+    void capitalCitiesNoConnectionReturnsNull() {
+        assertNull(test.getAllCapitalCitiesPopDesc());
+    }
+
+    // getting all capital cities in a continent tests
+
+    @Test
+    /*
+    Test is so that if theres no connection it should return null
+     */
+    void capitalCitiesInContinentNoConnectionReturnsNull() {
+        assertNull(test.getAllCitiesInContienentPopDesc("Europe"));
+    }
+
+    // displaycities test for capitalcities
+
+    @Test
+    /*
+    Test is so that if there is no capital cities to display it should say that
+     */
+    void displayingNullResultDoesNotThrow() {
+        test.displayCitiesPopDesc(test.getAllCapitalCitiesPopDesc());
+    }
+
+
+
 }
+
 
 
