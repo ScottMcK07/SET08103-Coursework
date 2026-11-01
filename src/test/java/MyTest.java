@@ -84,13 +84,16 @@ class AppTest {
         assertEquals(-1, test.getPopulation("country", "Netherlands"));
     }
 
-
+    @Test
     /*
     This test is for checking if blank input is not allowed for the choice
      */
     void getPopBlankChoiceReturnsMinusOne() {
         assertEquals(-1, test.getPopulation("", "world"));
     }
+
+
+
 
     // getAllCountriesPopDesc Tests
 
