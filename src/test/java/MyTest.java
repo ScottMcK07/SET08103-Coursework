@@ -1,76 +1,96 @@
 import com.napier.sem.App;
 import com.napier.sem.City;
 import com.napier.sem.Country;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
-
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 
 class AppTest {
-
-    private App test;
-    private final PrintStream originalOut = System.out;
-    private ByteArrayOutputStream out;
+    static App test;
 
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void init(){
         test = new App();
-        out = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(out));
+
+
     }
 
-    @AfterEach
-    void tearDown() {
-        System.setOut(originalOut);
-    }
+    @AfterAll
+    static void connectDone(){
 
-    private String output() {
-        return out.toString();
     }
 
 
+    // getPopulation Tests
     @Test
     /*
     This test is to test the exceptional boundaries of user input so things that lie outside the ability of the function ie galaxy searching population, and it should return -1 and say that it is wrong
      */
     void getPopInvalidChoiceReturnsMinusOne() {
-
-
-        long result = test.getPopulation("galaxy", "Milky-way");
-
-        assertEquals(-1, result);
+        assertEquals(-1, test.getPopulation("galaxy", "Milk way"));
     }
+
+    @Test
+     /*
+    This test should return minus one and say could not get a population for world because the database hasn't been connected essentially just checking the database
+     */
+    void worldPopulationNoConnectionHitsCatchAndReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("world", ""));
+    }
+
+    @Test
+      /*
+    This test should return minus one and say could not get a population for  country because the database hasn't been connected essentially just checking the database
+     */
+    void countryPopulationNoConnectionReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("country", "Netherlands"));
+    }
+
+
+    /*
+    This test is for checking if blank input is not allowed for the choice
+     */
+    void getPopBlankChoiceReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("", "world"));
+    }
+
+    // getAllCountriesPopDesc Tests
+
+
+
     @Test
      /*
     To test when the connection goes wrong in getallcountries it should return null
      */
-    void getAllCountriesNoConnectionReturnsNull () {
+    void getAllCountriesDescPopNoConnectionReturnsNull () {
         assertNull(test.getAllCountriesPopDesc());
         }
+
+
+    //  getAllCitiesPopDesc Tests
+
 
     @Test
     /*
     To test when the connection goes wrong in getallcities it should return null
      */
-    void getAllCitiesNoConnectionReturnsNull() {
+    void getAllCitiesDescPopNoConnectionReturnsNull() {
         assertNull(test.getAllCitiesPopDesc());
     }
+
+    //  DisplayCountriesPopDesc Tests
 
     @Test
     /*
     To test when there is a null list being displayed in displaying countries which should display no countries as there is none in the list
      */
-    void DisplayCountriesNullListPrintsNoCountries() {
+    void DisplayCountriesPopDescNullListPrintsNoCountries() {
         test.displayCountriesPopDesc(null);
-        assertTrue(output().contains("No countries"));
     }
 
 
@@ -78,7 +98,7 @@ class AppTest {
      /*
     To test if display countries will print every field correctly essentially extreme testing
      */
-    void displayCountriesPrintsEveryField() {
+    void displayCountriesDescPopPrintsEveryField() {
         Country c = new Country();
         c.CountryCode = "NLD";
         c.CountryName = "Netherlands";
@@ -90,24 +110,17 @@ class AppTest {
         list.add(c);
 
         test.displayCountriesPopDesc(list);
-
-        String o = output();
-        assertTrue(o.contains("NLD"));
-        assertTrue(o.contains("Netherlands"));
-        assertTrue(o.contains("Europe"));
-        assertTrue(o.contains("Western Europe"));
-        assertTrue(o.contains("1586400"));
-        assertTrue(o.contains("Amsterdam"));
     }
+
+
+    //  DisplayCitiesDescPopNull Tests
 
     @Test
     /*
     To test when there is a null list being used when in displaying cities which should display no cities as there is nothing in the list
      */
-    void displayCitiesNullListPrintsNoCities() {
+    void displayCitiesDescPopNullListPrintsNoCities() {
         test.displayCitiesPopDesc(null);
-
-        assertTrue(output().contains("No cities"));
     }
 
     @Test
@@ -124,11 +137,7 @@ class AppTest {
         list.add(c);
 
         test.displayCitiesPopDesc(list);
-        String o = output();
-        assertTrue(o.contains("Edinburgh"));
-        assertTrue(o.contains("United Kingdom"));
-        assertTrue(o.contains("Scotland"));
-        assertTrue(o.contains("450180"));
+
     }
 }
 

@@ -132,7 +132,7 @@ public class App {
                 return -1; //Returns -1 if there is a failure as there cannot be a -1 population
             }
         }
-        catch (SQLException e)
+        catch (Exception e)
         {
             System.out.println(e.getMessage());
             System.out.println("could not get a  population for " + choice);
