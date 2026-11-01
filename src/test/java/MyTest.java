@@ -43,6 +43,39 @@ class AppTest {
         assertEquals(-1, test.getPopulation("world", ""));
     }
 
+
+    @Test
+      /*
+    This test should return minus one and say could not get a population for  continent because the database hasn't been connected essentially just checking the database
+     */
+    void continentPopulationNoConnectionReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("continent", "Europe"));
+    }
+
+    @Test
+      /*
+    This test should return minus one and say could not get a population for  region because the database hasn't been connected essentially just checking the database
+     */
+    void regionPopulationNoConnectionReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("region", "Western Europe"));
+    }
+
+    @Test
+      /*
+    This test should return minus one and say could not get a population for  district because the database hasn't been connected essentially just checking the database
+     */
+    void districtPopulationNoConnectionReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("district", "Scotland"));
+    }
+
+    @Test
+      /*
+    This test should return minus one and say could not get a population for  city because the database hasn't been connected essentially just checking the database
+     */
+    void cityPopulationNoConnectionReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("city", "Edinburgh"));
+    }
+
     @Test
       /*
     This test should return minus one and say could not get a population for  country because the database hasn't been connected essentially just checking the database
