@@ -77,40 +77,35 @@ public class App {
         String sql = "";
         String alias = "";
 
-        if (choice.equals("world"))
-        {
-            alias = "GlobalPopulation";
-            sql = "SELECT SUM(Population) AS GlobalPopulation FROM country"; //String for everyone Pop
-        }
-        else if (choice.equals("continent"))
-        {
-            alias = "ContinentPopulation";
-            sql = "SELECT SUM(Population) AS ContinentPopulation FROM country WHERE Continent = '" + searching + "'"; //String for Continent Pop
-        }
-        else if (choice.equals("region"))
-        {
-            alias = "RegionPopulation";
-            sql = "SELECT SUM(Population) AS RegionPopulation FROM country WHERE Region = '" + searching + "'"; //String for Region Pop
-        }
-        else if (choice.equals("country"))
-        {
-            alias = "CountryPopulation";
-            sql = "SELECT Population AS CountryPopulation FROM country WHERE Name = '" + searching + "'";  //String for Country Pop
-        }
-        else if (choice.equals("district"))
-        {
-            alias = "DistrictPopulation";
-            sql = "SELECT SUM(Population) AS DistrictPopulation FROM city WHERE District = '" + searching + "'"; //String for District Pop
-        }
-        else if (choice.equals("city"))
-        {
-            alias = "CityPopulation";
-            sql = "SELECT Population AS CityPopulation FROM city WHERE Name = '" + searching + "'"; //String for City Pop
-        }
-        else
-        {
-            System.out.println("Sorry you must've mispelled or this does not exist please try again.");
-            return -1;
+        switch (choice) {
+            case "world" -> {
+                alias = "GlobalPopulation";
+                sql = "SELECT SUM(Population) AS GlobalPopulation FROM country"; //String for everyone Pop
+            }
+            case "continent" -> {
+                alias = "ContinentPopulation";
+                sql = "SELECT SUM(Population) AS ContinentPopulation FROM country WHERE Continent = '" + searching + "'"; //String for Continent Pop
+            }
+            case "region" -> {
+                alias = "RegionPopulation";
+                sql = "SELECT SUM(Population) AS RegionPopulation FROM country WHERE Region = '" + searching + "'"; //String for Region Pop
+            }
+            case "country" -> {
+                alias = "CountryPopulation";
+                sql = "SELECT Population AS CountryPopulation FROM country WHERE Name = '" + searching + "'";  //String for Country Pop
+            }
+            case "district" -> {
+                alias = "DistrictPopulation";
+                sql = "SELECT SUM(Population) AS DistrictPopulation FROM city WHERE District = '" + searching + "'"; //String for District Pop
+            }
+            case "city" -> {
+                alias = "CityPopulation";
+                sql = "SELECT Population AS CityPopulation FROM city WHERE Name = '" + searching + "'"; //String for City Pop
+            }
+            default -> {
+                System.out.println("Sorry you must've mispelled or this does not exist please try again.");
+                return -1;
+            }
         }
         // Create an SQL statement
         try (
