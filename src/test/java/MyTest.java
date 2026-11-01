@@ -99,6 +99,16 @@ class AppTest {
         assertTrue(o.contains("1586400"));
         assertTrue(o.contains("Amsterdam"));
     }
+
+    @Test
+    /*
+    To test when there is a null list being used when in displaying cities which should display no cities as there is nothing in the list
+     */
+    void displayCitiesNullListPrintsNoCities() {
+        test.displayCitiesPopDesc(null);
+
+        assertTrue(output().contains("No cities"));
+    }
 }
 
 
