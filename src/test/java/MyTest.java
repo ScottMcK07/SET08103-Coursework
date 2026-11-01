@@ -52,7 +52,7 @@ class AppTest {
      /*
     To test when the connection goes wrong in getallcountries it should return null
      */
-    void getAllCountries_noConnection_returnsNull () {
+    void getAllCountriesNoConnectionReturnsNull () {
         assertNull(test.getAllCountriesPopDesc());
         }
 
@@ -60,10 +60,18 @@ class AppTest {
     /*
     To test when the connection goes wrong in getallcities it should return null
      */
-    void getAllCities_noConnection_returnsNull() {
+    void getAllCitiesNoConnectionReturnsNull() {
         assertNull(test.getAllCitiesPopDesc());
     }
 
+    @Test
+    /*
+    To test when there is a null list being displayed in displaying countries which should display no countries as there is none in the list
+     */
+    void DisplayCountriesNullListPrintsNoCountries() {
+        test.displayCountriesPopDesc(null);
+        assertTrue(output().contains("No countries"));
+    }
 
 }
 
