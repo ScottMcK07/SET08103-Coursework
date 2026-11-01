@@ -466,6 +466,91 @@ public class App {
     }
 
     /**
+     * Gets all the capital cities in the world , organised by largest population to smallest.
+     * @return A list of all capital cities in the world ordered from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<City> getAllCapitalCitiesPopDesc()
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.Name, country.Name AS Country, city.District, city.Population "
+                            + "FROM country "
+                            + "JOIN city ON country.Capital = city.ID "
+                            + "ORDER BY city.Population DESC";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next())
+            {
+                City c = new City();
+
+                c.CityName = rset.getString("Name");
+                c.CityCountry = rset.getString("Country");
+                c.District = rset.getString("District");
+                c.CityPopulation = rset.getDouble("Population");
+
+                cities.add(c);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get capital cities for world");
+            return null;
+        }
+    }
+
+    /**
+     * Gets all the capital cities in the continent , organised by largest population to smallest.
+     * @return A list of all capital cities in the continent ordered from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<City> getAllCapitalCitiesInContinentPopDesc(String continent)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.Name, country.Name AS Country, city.District, city.Population "
+                            + "FROM country "
+                            + "JOIN city ON country.Capital = city.ID "
+                            + "WHERE country.Continent = '" + continent + "' "
+                            + "ORDER BY city.Population DESC";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next())
+            {
+                City c = new City();
+
+                c.CityName = rset.getString("Name");
+                c.CityCountry = rset.getString("Country");
+                c.District = rset.getString("District");
+                c.CityPopulation = rset.getDouble("Population");
+
+                cities.add(c);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get capital cities for continent: " + continent);
+            return null;
+        }
+    }
+
+    /**
      * Disconnect from the MySQL database.
      */
     public void disconnect() {
@@ -552,6 +637,16 @@ public class App {
         ArrayList<City> cities4 = a.getAllCitiesInDistrictPopDesc("Scotland");
         //Displays them
         a.displayCitiesPopDesc(cities4);
+
+
+        System.out.println(" ");
+        System.out.println("SEVENTH REPORT FOR POPULATION// ALL CAPITAL CITIES IN THE WORLD ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<City> cities5 = a.getAllCapitalCitiesPopDesc();
+        //Displays them
+        a.displayCitiesPopDesc(cities5);
 
         System.out.println(" ");
         System.out.println("ADDITIONAL STUFF THAT THEY ASKED FOR IN THE BRIE");
