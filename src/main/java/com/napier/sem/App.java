@@ -649,6 +649,15 @@ public class App {
         a.displayCitiesPopDesc(cities5);
 
         System.out.println(" ");
+        System.out.println("EIGHT REPORT FOR POPULATION// ALL CAPITAL CITIES IN A CONTINENT(Europe) ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<City> cities6 = a.getAllCapitalCitiesInContinentPopDesc("Europe");
+        //Displays them
+        a.displayCitiesPopDesc(cities6);
+
+        System.out.println(" ");
         System.out.println("ADDITIONAL STUFF THAT THEY ASKED FOR IN THE BRIE");
         System.out.println(" ");
 
