@@ -293,6 +293,50 @@ public class App {
     }
 
     /**
+     * Gets all the cities in a continent , organised by largest population to smallest.
+     * @return A list of all cities in a continent ordered from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<City> getAllCitiesInContienentPopDesc(String continent)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.Name, country.Name AS Country, city.District, city.Population "
+                            + "FROM city "
+                            + "JOIN country ON city.CountryCode = country.Code "
+                            + "WHERE country.Continent = '" + continent + "' "
+                            + "ORDER BY city.Population DESC";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next())
+            {
+                City c = new City();
+
+                c.CityName = rset.getString("Name");
+                c.CityCountry = rset.getString("Country");
+                c.District = rset.getString("District");
+                c.CityPopulation = rset.getDouble("Population");
+
+                cities.add(c);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get cities for contient " + continent);
+            return null;
+        }
+    }
+
+
+    /**
      * Disconnect from the MySQL database.
      */
     public void disconnect() {
@@ -342,6 +386,15 @@ public class App {
         ArrayList<City> cities = a.getAllCitiesPopDesc();
         //Displays them
         a.displayCitiesPopDesc(cities);
+
+        System.out.println(" ");
+        System.out.println("THIRD REPORT FOR POPULATION// ALL CITIES IN A CONTINENT(EUROPE) ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<City> cities1 = a.getAllCitiesInContienentPopDesc("Europe");
+        //Displays them
+        a.displayCitiesPopDesc(cities1);
 
         System.out.println(" ");
         System.out.println("ADDITIONAL STUFF THAT THEY ASKED FOR IN THE BRIE");
