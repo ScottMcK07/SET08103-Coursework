@@ -73,6 +73,32 @@ class AppTest {
         assertTrue(output().contains("No countries"));
     }
 
+
+    @Test
+     /*
+    To test if display countries will print every field correctly essentially extreme testing
+     */
+    void displayCountriesPrintsEveryField() {
+        Country c = new Country();
+        c.CountryCode = "NLD";
+        c.CountryName = "Netherlands";
+        c.Continent = "Europe";
+        c.Region = "Western Europe";
+        c.CountryPopulation = 1586400;
+        c.CapitalName = "Amsterdam";
+        ArrayList<Country> list = new ArrayList<>();
+        list.add(c);
+
+        test.displayCountriesPopDesc(list);
+
+        String o = output();
+        assertTrue(o.contains("NLD"));
+        assertTrue(o.contains("Netherlands"));
+        assertTrue(o.contains("Europe"));
+        assertTrue(o.contains("Western Europe"));
+        assertTrue(o.contains("1586400"));
+        assertTrue(o.contains("Amsterdam"));
+    }
 }
 
 

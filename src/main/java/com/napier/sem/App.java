@@ -238,8 +238,8 @@ public class App {
         for (Country c : countries)
         {
             if (c == null) continue;
-            System.out.printf("%-5s %-45s %-15s%n",
-                    c.CountryCode, c.CountryName, c.CountryPopulation, c.Continent, c.Region, c.CountryPopulation, c.CapitalName);
+            System.out.printf("%-5s %-45s %-15s %-27s %-12d %-30s%n",
+                    c.CountryCode, c.CountryName, c.Continent, c.Region, c.CountryPopulation, c.CapitalName);
         }
     }
 
