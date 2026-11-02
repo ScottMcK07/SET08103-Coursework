@@ -19,7 +19,7 @@ public class App {
     /**
      * Connect to the MySQL database.
      */
-    public void connect() {
+    public void connect(String location, int delay) {
         try {
             // Load Database driver
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -29,31 +29,22 @@ public class App {
         }
 
         int retries = 10;
-
         for (int i = 0; i < retries; ++i) {
             System.out.println("Connecting to database...");
-
             try {
                 // Wait a bit for db to start
-                Thread.sleep(30000);
-
+                Thread.sleep(delay);
                 // Connect to database
-                con = DriverManager.getConnection("jdbc:mysql://db:3306/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
-
-
+                con = DriverManager.getConnection("jdbc:mysql://" + location
+                                + "/world?allowPublicKeyRetrieval=true&useSSL=false",
+                        "root", "example");
                 System.out.println("Successfully connected");
                 break;
-
             } catch (SQLException sqle) {
-                System.out.println(
-                        "Failed to connect to database attempt " + i
-                );
+                System.out.println("Failed to connect to database attempt " +                                  Integer.toString(i));
                 System.out.println(sqle.getMessage());
-
             } catch (InterruptedException ie) {
                 System.out.println("Thread interrupted? Should not happen.");
-                Thread.currentThread().interrupt();
-                return;
             }
         }
     }
@@ -77,40 +68,35 @@ public class App {
         String sql = "";
         String alias = "";
 
-        if (choice.equals("world"))
-        {
-            alias = "GlobalPopulation";
-            sql = "SELECT SUM(Population) AS GlobalPopulation FROM country"; //String for everyone Pop
-        }
-        else if (choice.equals("continent"))
-        {
-            alias = "ContinentPopulation";
-            sql = "SELECT SUM(Population) AS ContinentPopulation FROM country WHERE Continent = '" + searching + "'"; //String for Continent Pop
-        }
-        else if (choice.equals("region"))
-        {
-            alias = "RegionPopulation";
-            sql = "SELECT SUM(Population) AS RegionPopulation FROM country WHERE Region = '" + searching + "'"; //String for Region Pop
-        }
-        else if (choice.equals("country"))
-        {
-            alias = "CountryPopulation";
-            sql = "SELECT Population AS CountryPopulation FROM country WHERE Name = '" + searching + "'";  //String for Country Pop
-        }
-        else if (choice.equals("district"))
-        {
-            alias = "DistrictPopulation";
-            sql = "SELECT SUM(Population) AS DistrictPopulation FROM city WHERE District = '" + searching + "'"; //String for District Pop
-        }
-        else if (choice.equals("city"))
-        {
-            alias = "CityPopulation";
-            sql = "SELECT Population AS CityPopulation FROM city WHERE Name = '" + searching + "'"; //String for City Pop
-        }
-        else
-        {
-            System.out.println("Sorry you must've mispelled or this does not exist please try again.");
-            return -1;
+        switch (choice) {
+            case "world" -> {
+                alias = "GlobalPopulation";
+                sql = "SELECT SUM(Population) AS GlobalPopulation FROM country"; //String for everyone Pop
+            }
+            case "continent" -> {
+                alias = "ContinentPopulation";
+                sql = "SELECT SUM(Population) AS ContinentPopulation FROM country WHERE Continent = '" + searching + "'"; //String for Continent Pop
+            }
+            case "region" -> {
+                alias = "RegionPopulation";
+                sql = "SELECT SUM(Population) AS RegionPopulation FROM country WHERE Region = '" + searching + "'"; //String for Region Pop
+            }
+            case "country" -> {
+                alias = "CountryPopulation";
+                sql = "SELECT Population AS CountryPopulation FROM country WHERE Name = '" + searching + "'";  //String for Country Pop
+            }
+            case "district" -> {
+                alias = "DistrictPopulation";
+                sql = "SELECT SUM(Population) AS DistrictPopulation FROM city WHERE District = '" + searching + "'"; //String for District Pop
+            }
+            case "city" -> {
+                alias = "CityPopulation";
+                sql = "SELECT Population AS CityPopulation FROM city WHERE Name = '" + searching + "'"; //String for City Pop
+            }
+            default -> {
+                System.out.println("Sorry you must've mispelled or this does not exist please try again.");
+                return -1;
+            }
         }
         // Create an SQL statement
         try (
@@ -137,7 +123,7 @@ public class App {
                 return -1; //Returns -1 if there is a failure as there cannot be a -1 population
             }
         }
-        catch (SQLException e)
+        catch (Exception e)
         {
             System.out.println(e.getMessage());
             System.out.println("could not get a  population for " + choice);
@@ -238,8 +224,8 @@ public class App {
         for (Country c : countries)
         {
             if (c == null) continue;
-            System.out.printf("%-5s %-45s %-15s%n",
-                    c.CountryCode, c.CountryName, c.CountryPopulation, c.Continent, c.Region, c.CountryPopulation, c.CapitalName);
+            System.out.printf("%-5s %-45s %-15s %-27s %-12d %-30s%n",
+                    c.CountryCode, c.CountryName, c.Continent, c.Region, c.CountryPopulation, c.CapitalName);
         }
     }
 
@@ -307,6 +293,264 @@ public class App {
     }
 
     /**
+     * Gets all the cities in a continent , organised by largest population to smallest.
+     * @return A list of all cities in a continent ordered from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<City> getAllCitiesInContienentPopDesc(String continent)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.Name, country.Name AS Country, city.District, city.Population "
+                            + "FROM city "
+                            + "JOIN country ON city.CountryCode = country.Code "
+                            + "WHERE country.Continent = '" + continent + "' "
+                            + "ORDER BY city.Population DESC";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next())
+            {
+                City c = new City();
+
+                c.CityName = rset.getString("Name");
+                c.CityCountry = rset.getString("Country");
+                c.District = rset.getString("District");
+                c.CityPopulation = rset.getDouble("Population");
+
+                cities.add(c);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get cities for contient: " + continent);
+            return null;
+        }
+    }
+
+    /**
+     * Gets all the cities in a region , organised by largest population to smallest.
+     * @return A list of all cities in a region ordered from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<City> getAllCitiesInRegionPopDesc(String region)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.Name, country.Name AS Country, city.District, city.Population "
+                            + "FROM city "
+                            + "JOIN country ON city.CountryCode = country.Code "
+                            + "WHERE country.Region = '" + region + "' "
+                            + "ORDER BY city.Population DESC";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next())
+            {
+                City c = new City();
+
+                c.CityName = rset.getString("Name");
+                c.CityCountry = rset.getString("Country");
+                c.District = rset.getString("District");
+                c.CityPopulation = rset.getDouble("Population");
+
+                cities.add(c);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get cities for region: " + region);
+            return null;
+        }
+    }
+
+
+    /**
+     * Gets all the cities in a country , organised by largest population to smallest.
+     * @return A list of all cities in a country ordered from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<City> getAllCitiesInCountryPopDesc(String name)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.Name, country.Name AS Country, city.District, city.Population "
+                            + "FROM city "
+                            + "JOIN country ON city.CountryCode = country.Code "
+                            + "WHERE country.Name = '" + name + "' "
+                            + "ORDER BY city.Population DESC";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next())
+            {
+                City c = new City();
+
+                c.CityName = rset.getString("Name");
+                c.CityCountry = rset.getString("Country");
+                c.District = rset.getString("District");
+                c.CityPopulation = rset.getDouble("Population");
+
+                cities.add(c);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get cities for country: " + name);
+            return null;
+        }
+    }
+
+    /**
+     * Gets all the cities in a district , organised by largest population to smallest.
+     * @return A list of all cities in a district ordered from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<City> getAllCitiesInDistrictPopDesc(String district)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.Name, country.Name AS Country, city.District, city.Population "
+                            + "FROM city "
+                            + "JOIN country ON city.CountryCode = country.Code "
+                            + "WHERE city.District = '" + district + "' "
+                            + "ORDER BY city.Population DESC";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next())
+            {
+                City c = new City();
+
+                c.CityName = rset.getString("Name");
+                c.CityCountry = rset.getString("Country");
+                c.District = rset.getString("District");
+                c.CityPopulation = rset.getDouble("Population");
+
+                cities.add(c);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get cities for district: " + district);
+            return null;
+        }
+    }
+
+    /**
+     * Gets all the capital cities in the world , organised by largest population to smallest.
+     * @return A list of all capital cities in the world ordered from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<City> getAllCapitalCitiesPopDesc()
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.Name, country.Name AS Country, city.District, city.Population "
+                            + "FROM country "
+                            + "JOIN city ON country.Capital = city.ID "
+                            + "ORDER BY city.Population DESC";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next())
+            {
+                City c = new City();
+
+                c.CityName = rset.getString("Name");
+                c.CityCountry = rset.getString("Country");
+                c.District = rset.getString("District");
+                c.CityPopulation = rset.getDouble("Population");
+
+                cities.add(c);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get capital cities for world");
+            return null;
+        }
+    }
+
+    /**
+     * Gets all the capital cities in the continent , organised by largest population to smallest.
+     * @return A list of all capital cities in the continent ordered from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<City> getAllCapitalCitiesInContinentPopDesc(String continent)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.Name, country.Name AS Country, city.District, city.Population "
+                            + "FROM country "
+                            + "JOIN city ON country.Capital = city.ID "
+                            + "WHERE country.Continent = '" + continent + "' "
+                            + "ORDER BY city.Population DESC";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next())
+            {
+                City c = new City();
+
+                c.CityName = rset.getString("Name");
+                c.CityCountry = rset.getString("Country");
+                c.District = rset.getString("District");
+                c.CityPopulation = rset.getDouble("Population");
+
+                cities.add(c);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get capital cities for continent: " + continent);
+            return null;
+        }
+    }
+
+    /**
      * Disconnect from the MySQL database.
      */
     public void disconnect() {
@@ -329,8 +573,14 @@ public class App {
         // Create new Application
         App a = new App();
 
-        // Connect to database
-        a.connect();
+
+        //Connecting to database
+        if(args.length < 1){
+            a.connect("localhost:33060", 30000);
+        }else{
+            a.connect(args[0], Integer.parseInt(args[1]));
+        }
+
 
         System.out.println(" ");
         System.out.println("FIRST REPORT FOR POPULATION// ALL COUNTRIES IN WORLD ORDERED BY LARGEST POPULATION TO SMALLEST ");
@@ -350,6 +600,62 @@ public class App {
         ArrayList<City> cities = a.getAllCitiesPopDesc();
         //Displays them
         a.displayCitiesPopDesc(cities);
+
+        System.out.println(" ");
+        System.out.println("THIRD REPORT FOR POPULATION// ALL CITIES IN A CONTINENT(EUROPE) ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<City> cities1 = a.getAllCitiesInContienentPopDesc("Europe");
+        //Displays them
+        a.displayCitiesPopDesc(cities1);
+
+        System.out.println(" ");
+        System.out.println("FORTH REPORT FOR POPULATION// ALL CITIES IN A REGION(WESTERN EUROPE) ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<City> cities2 = a.getAllCitiesInRegionPopDesc("Western Europe");
+        //Displays them
+        a.displayCitiesPopDesc(cities2);
+
+
+        System.out.println(" ");
+        System.out.println("FIFTH REPORT FOR POPULATION// ALL CITIES IN A COUNTRY(UNITED KINGDOM) ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<City> cities3 = a.getAllCitiesInCountryPopDesc("United Kingdom");
+        //Displays them
+        a.displayCitiesPopDesc(cities3);
+
+        System.out.println(" ");
+        System.out.println("SIXTH REPORT FOR POPULATION// ALL CITIES IN A DISTRICT(SCOTLAND) ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<City> cities4 = a.getAllCitiesInDistrictPopDesc("Scotland");
+        //Displays them
+        a.displayCitiesPopDesc(cities4);
+
+
+        System.out.println(" ");
+        System.out.println("SEVENTH REPORT FOR POPULATION// ALL CAPITAL CITIES IN THE WORLD ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<City> cities5 = a.getAllCapitalCitiesPopDesc();
+        //Displays them
+        a.displayCitiesPopDesc(cities5);
+
+        System.out.println(" ");
+        System.out.println("EIGHT REPORT FOR POPULATION// ALL CAPITAL CITIES IN A CONTINENT(Europe) ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<City> cities6 = a.getAllCapitalCitiesInContinentPopDesc("Europe");
+        //Displays them
+        a.displayCitiesPopDesc(cities6);
 
         System.out.println(" ");
         System.out.println("ADDITIONAL STUFF THAT THEY ASKED FOR IN THE BRIE");
