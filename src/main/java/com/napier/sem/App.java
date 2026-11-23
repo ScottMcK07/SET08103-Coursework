@@ -745,7 +745,7 @@ public class App {
         // Gets and displays district's population
         a.displayPopulation("district", "Scotland");
 
-        // Gets and displays globa Population
+        // Gets and displays global Population
         System.out.println(" ");
         System.out.println("Population for the world");
         System.out.println(" ");
