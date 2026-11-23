@@ -649,6 +649,57 @@ public class App {
 
 
     /**
+     * Gets the top N most populated capital cities in the world which is then organised from largest population to smallest.
+     * @param n no of capital cities in the world to return
+     * @return A list of the top (user input) capital cities organisation from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<City> getTopUserInputCapitalCitiesPopDesc(int n)
+    {
+        // validates the input for the user
+        if (n <= 0)
+        {
+            System.out.println("N must be greater than 0");
+            return null;
+        }
+
+        String strSelect =
+                "SELECT city.Name, country.Name AS Country, city.District, city.Population "
+                        + "FROM country "
+                        + "JOIN city ON country.Capital = city.ID "
+                        + "ORDER BY city.Population DESC "
+                        + "LIMIT ?";
+
+        // using prepared statement on this one as it requires user input
+        try (PreparedStatement pstmt = con.prepareStatement(strSelect))
+        {
+            pstmt.setInt(1, n);
+
+            try (ResultSet rset = pstmt.executeQuery())
+            {
+                ArrayList<City> cities = new ArrayList<City>();
+                while (rset.next())
+                {
+                    City c = new City();
+
+                    c.CityName = rset.getString("Name");
+                    c.CityCountry = rset.getString("Country");
+                    c.District = rset.getString("District");
+                    c.CityPopulation = rset.getDouble("Population");
+
+                    cities.add(c);
+                }
+                return cities;
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get top " + n + " capital cities for world");
+            return null;
+        }
+    }
+
+    /**
      * Disconnect from the MySQL database.
      */
     public void disconnect() {
@@ -774,6 +825,14 @@ public class App {
         //Displays them
         a.displayCountriesPopDesc(countries3);
 
+        System.out.println(" ");
+        System.out.println("ELEVENTH REPORT FOR POPULATION// TOP N(USER INPUT I PUT 10) CAPITAL CITIES IN THE WORLD ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<City> cities7 = a.getTopUserInputCapitalCitiesPopDesc(10);
+        //Displays them
+        a.displayCitiesPopDesc(cities7);
 
         System.out.println(" ");
         System.out.println("ADDITIONAL REQUIREMENTS ASKED FOR IN THE BRIEF");
