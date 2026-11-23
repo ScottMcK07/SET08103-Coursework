@@ -599,6 +599,53 @@ public class App {
     }
 
 
+    /**
+     * Gets all the countries in a continent , organised by largest population to smallest.
+     * @return A list of all countries  in a given continent ordered from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<Country> getAllCountriesInContinentPopDesc(String continent)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT country.Code, country.Name, country.Continent, country.Region, "
+                            + "country.Population, city.Name AS Capital "
+                            + "FROM country "
+                            + "LEFT JOIN city ON country.Capital = city.ID "
+                            + "WHERE country.Continent = '" + continent + "'"
+                            + "ORDER BY country.Population DESC";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            //Get Countries info
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next())
+            {
+                Country c = new Country();
+
+                c.CountryCode = rset.getString("Code");
+                c.CountryName = rset.getString("Name");
+                c.Continent = rset.getString("Continent");
+                c.Region = rset.getString("Region");
+                c.CountryPopulation = rset.getInt("Population");
+                c.CapitalName = rset.getString("Capital");
+
+                countries.add(c);
+
+
+            }
+            return countries;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
 
 
     /**
@@ -717,6 +764,16 @@ public class App {
         ArrayList<Country> countries2 = a.getAllCountriesInRegionPopDesc("Western Europe");
         //Displays them
         a.displayCountriesPopDesc(countries2);
+
+        System.out.println(" ");
+        System.out.println("TENTH REPORT FOR POPULATION// ALL COUNTRIES IN A CONTINENT(EUROPE) ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<Country> countries3 = a.getAllCountriesInContinentPopDesc("Europe");
+        //Displays them
+        a.displayCountriesPopDesc(countries3);
+
 
         System.out.println(" ");
         System.out.println("ADDITIONAL REQUIREMENTS ASKED FOR IN THE BRIEF");
