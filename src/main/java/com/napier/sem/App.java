@@ -550,6 +550,54 @@ public class App {
         }
     }
 
+
+    public ArrayList<Country> getAllCountriesInRegionPopDesc(String region)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT country.Code, country.Name, country.Continent, country.Region, "
+                            + "country.Population, city.Name AS Capital "
+                            + "FROM country "
+                            + "LEFT JOIN city ON country.Capital = city.ID "
+                            + "WHERE country.Region = '" + region + "'"
+                            + "ORDER BY country.Population DESC";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            //Get Countries info
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next())
+            {
+                Country c = new Country();
+
+                c.CountryCode = rset.getString("Code");
+                c.CountryName = rset.getString("Name");
+                c.Continent = rset.getString("Continent");
+                c.Region = rset.getString("Region");
+                c.CountryPopulation = rset.getInt("Population");
+                c.CapitalName = rset.getString("Capital");
+
+                countries.add(c);
+
+
+            }
+            return countries;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+
+
+
     /**
      * Disconnect from the MySQL database.
      */
@@ -656,6 +704,16 @@ public class App {
         ArrayList<City> cities6 = a.getAllCapitalCitiesInContinentPopDesc("Europe");
         //Displays them
         a.displayCitiesPopDesc(cities6);
+
+
+        System.out.println(" ");
+        System.out.println("NINTH REPORT FOR POPULATION// ALL COUNTRIES IN A REGION(WESTERN EUROPE) ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<Country> countries2 = a.getAllCountriesInRegionPopDesc("Western Europe");
+        //Displays them
+        a.displayCountriesPopDesc(countries2);
 
         System.out.println(" ");
         System.out.println("ADDITIONAL STUFF THAT THEY ASKED FOR IN THE BRIE");
