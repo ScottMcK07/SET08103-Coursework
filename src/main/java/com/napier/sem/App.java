@@ -550,7 +550,10 @@ public class App {
         }
     }
 
-
+    /**
+     * Gets all the countries in a region , organised by largest population to smallest.
+     * @return A list of all countries  in a given region ordered from largest population to smallest, or null if there is an error.
+     */
     public ArrayList<Country> getAllCountriesInRegionPopDesc(String region)
     {
         try
@@ -716,7 +719,7 @@ public class App {
         a.displayCountriesPopDesc(countries2);
 
         System.out.println(" ");
-        System.out.println("ADDITIONAL STUFF THAT THEY ASKED FOR IN THE BRIE");
+        System.out.println("ADDITIONAL REQUIREMENTS ASKED FOR IN THE BRIEF");
         System.out.println(" ");
 
 
