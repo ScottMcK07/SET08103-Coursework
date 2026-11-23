@@ -3,6 +3,7 @@ services:
   # Application Dockerfile is in same folder which is .
   app:
     build: .
+    command: ["db:3306", "30000"]
 
   # db is is db folder
   db:
