@@ -726,7 +726,7 @@ public class App {
         System.out.println("Population for one country(United Kingdom)");
         System.out.println(" ");
 
-        //Get an display the country's population
+        //Gets and displays the country's population
         a.displayPopulation("country", "United Kingdom");
 
 
