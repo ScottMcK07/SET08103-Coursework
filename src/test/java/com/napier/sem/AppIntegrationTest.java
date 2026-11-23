@@ -31,66 +31,86 @@ public class AppIntegrationTest {
 
     // Population  integration tests
     @Test
-    void testWorldPopulation() {
+    void testWorldPopulation() { // get population of entire world
         long population = app.getPopulation("world","");
 
         assertTrue(population > 0, "World population should be greater than zero");
     }
 
     @Test
-    void testContinentPopulation() {
+    void testContinentPopulation() { // get population of a continent, in this case Europe
         long population = app.getPopulation("continent", "Europe");
 
         assertTrue(population > 0, "Europe population should be greater than zero");
     }
 
     @Test
-    void testRegionPopulation() {
+    void testRegionPopulation() { // get population of a region, in this case Western Europe
         long population = app.getPopulation("region", "Western Europe");
 
         assertTrue(population > 0, "Western Europe population should be greater than zero");
     }
 
     @Test
-    void testCountryPopulation() {
+    void testCountryPopulation() { // get population of a country, in this case the UK
         long population = app.getPopulation("country", "United Kingdom");
 
         assertTrue(population > 0, "United Kingdom population should be greater than zero");
     }
 
     @Test
-    void testDistrictPopulation() {
+    void testDistrictPopulation() { // get population of a district, in this case Scotland
         long population = app.getPopulation("district", "Scotland");
 
         assertTrue(population > 0, "Scotland population should be greater than zero");
     }
 
     @Test
-    void testCityPopulation() {
+    void testCityPopulation() { // get population of a city, in this case Amsterdam
         long population = app.getPopulation("city", "Amsterdam");
 
         assertTrue(population > 0, "Amsterdam population should be greater than zero");
     }
 
     @Test
-    void testInvalidPopulationType() {
+    void testInvalidPopulationType() { // choice should only be one of; world, continent, region, country, district, city
+                                       // therefore edinburgh is an invalid input
         long population = app.getPopulation("edinburgh", "Scotland");
 
         assertEquals(-1, population, "Invalid population type should return -1");
     }
 
     @Test
-    void testNonExistentCountryPopulation() {
+    void testNonExistentCountryPopulation() { // searching for a country which doesn't exist
         long population = app.getPopulation("country", "NonExistentCountry");
 
         assertEquals(-1, population, "Non-existent country should return -1");
     }
 
     @Test
-    void testNonExistentCityPopulation() {
+    void testNonExistentCityPopulation() { // searching for a city which doesn't exist
         long population = app.getPopulation("city", "NonExistentCity");
 
         assertEquals(-1, population, "Non-existent city should return -1");
     }
 
+    @Test
+    void testNonExistentRegionPopulation() { // searching for the population of a region which doesn't exist
+        long population = app.getPopulation("region", "NonExistentRegion");
+        assertEquals(-1, population, "Non-existent Region should return -1");
+
+    }
+
+    @Test
+    void testNonExistentContinentPopulation () { // searching for the population of a continent which doesn't exist
+        long population = app.getPopulation("continent", "NonExistentContinent");
+        assertEquals(-1, population, "Non-existent conitnent should return -1");
+
+    }
+
+    @Test
+    void testNonExistentDistrictPopulation () { // searching for the population of a district which doesn't exist
+        long population = app.getPopulation("district", "NonExistentDistrict");
+        assertEquals(-1, population, "Non-existent district should return -1");
+    }
 }
