@@ -551,6 +551,206 @@ public class App {
     }
 
     /**
+     * Gets all the countries in a region , organised by largest population to smallest.
+     * @return A list of all countries  in a given region ordered from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<Country> getAllCountriesInRegionPopDesc(String region)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT country.Code, country.Name, country.Continent, country.Region, "
+                            + "country.Population, city.Name AS Capital "
+                            + "FROM country "
+                            + "LEFT JOIN city ON country.Capital = city.ID "
+                            + "WHERE country.Region = '" + region + "'"
+                            + "ORDER BY country.Population DESC";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            //Get Countries info
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next())
+            {
+                Country c = new Country();
+
+                c.CountryCode = rset.getString("Code");
+                c.CountryName = rset.getString("Name");
+                c.Continent = rset.getString("Continent");
+                c.Region = rset.getString("Region");
+                c.CountryPopulation = rset.getInt("Population");
+                c.CapitalName = rset.getString("Capital");
+
+                countries.add(c);
+
+
+            }
+            return countries;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+
+    /**
+     * Gets all the countries in a continent , organised by largest population to smallest.
+     * @return A list of all countries  in a given continent ordered from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<Country> getAllCountriesInContinentPopDesc(String continent)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT country.Code, country.Name, country.Continent, country.Region, "
+                            + "country.Population, city.Name AS Capital "
+                            + "FROM country "
+                            + "LEFT JOIN city ON country.Capital = city.ID "
+                            + "WHERE country.Continent = '" + continent + "'"
+                            + "ORDER BY country.Population DESC";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            //Get Countries info
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next())
+            {
+                Country c = new Country();
+
+                c.CountryCode = rset.getString("Code");
+                c.CountryName = rset.getString("Name");
+                c.Continent = rset.getString("Continent");
+                c.Region = rset.getString("Region");
+                c.CountryPopulation = rset.getInt("Population");
+                c.CapitalName = rset.getString("Capital");
+
+                countries.add(c);
+
+
+            }
+            return countries;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+
+    /**
+     * Gets the top N most populated capital cities in the world which is then organised from largest population to smallest.
+     * @param n no of capital cities in the world to return
+     * @return A list of the top (user input) capital cities organisation from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<City> getTopUserInputCapitalCitiesPopDesc(int n)
+    {
+        // validates the input for the user
+        if (n <= 0)
+        {
+            System.out.println("N must be greater than 0");
+            return null;
+        }
+
+        String strSelect =
+                "SELECT city.Name, country.Name AS Country, city.District, city.Population "
+                        + "FROM country "
+                        + "JOIN city ON country.Capital = city.ID "
+                        + "ORDER BY city.Population DESC "
+                        + "LIMIT ?";
+
+        // using prepared statement on this one as it requires user input
+        try (PreparedStatement pstmt = con.prepareStatement(strSelect))
+        {
+            pstmt.setInt(1, n);
+
+            try (ResultSet rset = pstmt.executeQuery())
+            {
+                ArrayList<City> cities = new ArrayList<City>();
+                while (rset.next())
+                {
+                    City c = new City();
+
+                    c.CityName = rset.getString("Name");
+                    c.CityCountry = rset.getString("Country");
+                    c.District = rset.getString("District");
+                    c.CityPopulation = rset.getDouble("Population");
+
+                    cities.add(c);
+                }
+                return cities;
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get top " + n + " capital cities for world");
+            return null;
+        }
+    }
+
+    /**
+     * Gets the top N most populated  cities in the world which is then organised from largest population to smallest.
+     * @param n no of  cities in the world to return
+     * @return A list of the top (user input)  cities organisation from largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<City> getTopUserInputCitiesPopDesc(int n)
+    {
+        // validates the input for the user
+        if (n <= 0)
+        {
+            System.out.println("N must be greater than 0");
+            return null;
+        }
+
+        String strSelect =
+                "SELECT city.Name, country.Name AS Country, city.District, city.Population "
+                        + "FROM country "
+                        + "JOIN city ON country.Code = city.CountryCode "
+                        + "ORDER BY city.Population DESC "
+                        + "LIMIT ?";
+
+        // using prepared statement on this one as it requires user input
+        try (PreparedStatement pstmt = con.prepareStatement(strSelect))
+        {
+            pstmt.setInt(1, n);
+
+            try (ResultSet rset = pstmt.executeQuery())
+            {
+                ArrayList<City> cities = new ArrayList<City>();
+                while (rset.next())
+                {
+                    City c = new City();
+
+                    c.CityName = rset.getString("Name");
+                    c.CityCountry = rset.getString("Country");
+                    c.District = rset.getString("District");
+                    c.CityPopulation = rset.getDouble("Population");
+
+                    cities.add(c);
+                }
+                return cities;
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get top " + n + " capital cities for world");
+            return null;
+        }
+    }
+
+    /**
      * Disconnect from the MySQL database.
      */
     public void disconnect() {
@@ -657,15 +857,52 @@ public class App {
         //Displays them
         a.displayCitiesPopDesc(cities6);
 
+
         System.out.println(" ");
-        System.out.println("ADDITIONAL STUFF THAT THEY ASKED FOR IN THE BRIE");
+        System.out.println("NINTH REPORT FOR POPULATION// ALL COUNTRIES IN A REGION(WESTERN EUROPE) ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<Country> countries2 = a.getAllCountriesInRegionPopDesc("Western Europe");
+        //Displays them
+        a.displayCountriesPopDesc(countries2);
+
+        System.out.println(" ");
+        System.out.println("TENTH REPORT FOR POPULATION// ALL COUNTRIES IN A CONTINENT(EUROPE) ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<Country> countries3 = a.getAllCountriesInContinentPopDesc("Europe");
+        //Displays them
+        a.displayCountriesPopDesc(countries3);
+
+        System.out.println(" ");
+        System.out.println("ELEVENTH REPORT FOR POPULATION// TOP N(USER INPUT I PUT 10) CAPITAL CITIES IN THE WORLD ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<City> cities7 = a.getTopUserInputCapitalCitiesPopDesc(10);
+        //Displays them
+        a.displayCitiesPopDesc(cities7);
+
+        System.out.println(" ");
+        System.out.println("TWELTH REPORT FOR POPULATION// TOP N(USER INPUT I PUT 20)  CITIES IN THE WORLD ORDERED BY LARGEST POPULATION TO SMALLEST ");
+        System.out.println(" ");
+
+        //Gets all cities and puts them ordered by population descending
+        ArrayList<City> cities8 = a.getTopUserInputCitiesPopDesc(20);
+        //Displays them
+        a.displayCitiesPopDesc(cities8);
+
+        System.out.println(" ");
+        System.out.println("ADDITIONAL REQUIREMENTS ASKED FOR IN THE BRIEF");
         System.out.println(" ");
 
 
         System.out.println("Population for one country(United Kingdom)");
         System.out.println(" ");
 
-        //Get an display the country's population
+        //Gets and displays the country's population
         a.displayPopulation("country", "United Kingdom");
 
 
@@ -684,7 +921,7 @@ public class App {
         // Gets and displays district's population
         a.displayPopulation("district", "Scotland");
 
-        // Gets and displays globa Population
+        // Gets and displays global Population
         System.out.println(" ");
         System.out.println("Population for the world");
         System.out.println(" ");
