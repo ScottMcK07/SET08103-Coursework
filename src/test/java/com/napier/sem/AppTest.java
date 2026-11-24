@@ -1,0 +1,235 @@
+package com.napier.sem;
+
+import com.napier.sem.App;
+import com.napier.sem.City;
+import com.napier.sem.Country;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.*;
+
+
+class AppTest {
+    static App test;
+
+
+    @BeforeAll
+    static void init(){
+        test = new App();
+
+
+    }
+
+    @AfterAll
+    static void connectDone(){
+
+    }
+
+
+    // getPopulation Tests
+    @Test
+    /*
+    This test is to test the exceptional boundaries of user input so things that lie outside the ability of the function ie galaxy searching population, and it should return -1 and say that it is wrong
+     */
+    void getPopInvalidChoiceReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("galaxy", "Milk way"));
+    }
+
+    @Test
+     /*
+    This test should return minus one and say could not get a population for world because the database hasn't been connected essentially just checking the database
+     */
+    void worldPopulationNoConnectionHitsCatchAndReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("world", ""));
+    }
+
+
+    @Test
+      /*
+    This test should return minus one and say could not get a population for  continent because the database hasn't been connected essentially just checking the database
+     */
+    void continentPopulationNoConnectionReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("continent", "Europe"));
+    }
+
+    @Test
+      /*
+    This test should return minus one and say could not get a population for  region because the database hasn't been connected essentially just checking the database
+     */
+    void regionPopulationNoConnectionReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("region", "Western Europe"));
+    }
+
+    @Test
+      /*
+    This test should return minus one and say could not get a population for  district because the database hasn't been connected essentially just checking the database
+     */
+    void districtPopulationNoConnectionReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("district", "Scotland"));
+    }
+
+    @Test
+      /*
+    This test should return minus one and say could not get a population for  city because the database hasn't been connected essentially just checking the database
+     */
+    void cityPopulationNoConnectionReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("city", "Edinburgh"));
+    }
+
+    @Test
+      /*
+    This test should return minus one and say could not get a population for  country because the database hasn't been connected essentially just checking the database
+     */
+    void countryPopulationNoConnectionReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("country", "Netherlands"));
+    }
+
+    @Test
+    /*
+    This test is for checking if blank input is not allowed for the choice
+     */
+    void getPopBlankChoiceReturnsMinusOne() {
+        assertEquals(-1, test.getPopulation("", "world"));
+    }
+
+
+
+
+    // getAllCountriesPopDesc Tests
+
+
+
+    @Test
+     /*
+    To test when the connection goes wrong in getallcountries it should return null
+     */
+    void getAllCountriesDescPopNoConnectionReturnsNull () {
+        assertNull(test.getAllCountriesPopDesc());
+        }
+
+
+    //  getAllCitiesPopDesc Tests
+
+
+    @Test
+    /*
+    To test when the connection goes wrong in getallcities it should return null
+     */
+    void getAllCitiesDescPopNoConnectionReturnsNull() {
+        assertNull(test.getAllCitiesPopDesc());
+    }
+
+    //  DisplayCountriesPopDesc Tests
+
+    @Test
+    /*
+    To test when there is a null list being displayed in displaying countries which should display no countries as there is none in the list
+     */
+    void DisplayCountriesPopDescNullListPrintsNoCountries() {
+        test.displayCountriesPopDesc(null);
+    }
+
+
+    @Test
+     /*
+    To test if display countries will print every field correctly essentially extreme testing
+     */
+    void displayCountriesDescPopPrintsEveryField() {
+        Country c = new Country();
+        c.CountryCode = "NLD";
+        c.CountryName = "Netherlands";
+        c.Continent = "Europe";
+        c.Region = "Western Europe";
+        c.CountryPopulation = 1586400;
+        c.CapitalName = "Amsterdam";
+        ArrayList<Country> list = new ArrayList<>();
+        list.add(c);
+
+        test.displayCountriesPopDesc(list);
+    }
+
+
+    //  DisplayCitiesDescPopNull Tests
+
+    @Test
+    /*
+    To test when there is a null list being used when in displaying cities which should display no cities as there is nothing in the list
+     */
+    void displayCitiesDescPopNullListPrintsNoCities() {
+        test.displayCitiesPopDesc(null);
+    }
+
+    @Test
+    /*
+     To test if display cities will print every field correctly essentially extreme testing using Edinburgh as an example
+     */
+    void displayCitiesPrintsEveryField() {
+        City c = new City();
+        c.CityName = "Edinburgh";
+        c.CityCountry = "United Kingdom";
+        c.District = "Scotland";
+        c.CityPopulation = 450180;
+        ArrayList<City> list = new ArrayList<>();
+        list.add(c);
+
+        test.displayCitiesPopDesc(list);
+
+    }
+
+    //  allCitiesInContinents tests
+
+    @Test
+    /*
+    Test is so that if theres no connection it should return null
+     */
+    void citiesInContinentNoConnectionReturnsNull() {
+        assertNull(test.getAllCitiesInContienentPopDesc("Europe"));
+    }
+
+    //  citiesInDistrict tests
+
+    @Test
+    /*
+    Test is so that if theres no connection it should return null
+     */
+    void citiesInDistrictNoConnectionReturnsNull() {
+        assertNull(test.getAllCitiesInDistrictPopDesc("Scotland"));
+    }
+
+    // getting all capital cities in the world tests
+
+    @Test
+    /*
+    Test is so that if theres no connection it should return null
+     */
+    void capitalCitiesNoConnectionReturnsNull() {
+        assertNull(test.getAllCapitalCitiesPopDesc());
+    }
+
+    // getting all capital cities in a continent tests
+
+    @Test
+    /*
+    Test is so that if theres no connection it should return null
+     */
+    void capitalCitiesInContinentNoConnectionReturnsNull() {
+        assertNull(test.getAllCitiesInContienentPopDesc("Europe"));
+    }
+
+    // displaycities test for capitalcities
+
+    @Test
+    /*
+    Test is so that if there is no capital cities to display it should say that
+     */
+    void displayingNullResultDoesNotThrow() {
+        test.displayCitiesPopDesc(test.getAllCapitalCitiesPopDesc());
+    }
+
+
+
+}
+
+
+
